@@ -1,61 +1,34 @@
 package ru.axothy;
 
-import one.nio.http.HttpServer;
-import one.nio.http.HttpServerConfig;
-import one.nio.http.HttpSession;
-import one.nio.http.Path;
-import one.nio.http.Request;
-import one.nio.http.Response;
-import one.nio.server.AcceptorConfig;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 
-/**
- * One-nio http server
- */
-public class Server extends HttpServer {
+public class Server {
     private static final int BASE_PORT = 8888;
-
-    public Server(int port) throws IOException {
-        super(createConfig(port));
-    }
-
-    @Path("/status")
-    public Response status() {
-        return Response.ok("OK");
-    }
-
-    @Override
-    public void handleRequest(Request request, HttpSession session) throws IOException {
-        try {
-            super.handleRequest(request, session);
-        } catch (RuntimeException e) {
-            session.sendError(Response.BAD_REQUEST, e.toString());
-        }
-    }
-
-    private static HttpServerConfig createConfig(int port) {
-        HttpServerConfig httpServerConfig = new HttpServerConfig();
-        AcceptorConfig acceptorConfig = new AcceptorConfig();
-        acceptorConfig.reusePort = true;
-        acceptorConfig.port = port;
-
-        httpServerConfig.acceptors = new AcceptorConfig[]{acceptorConfig};
-        httpServerConfig.closeSessions = true;
-        return httpServerConfig;
-    }
-
-
     public static void main(String[] args) throws IOException {
-        int port;
+        HttpServer server = HttpServer.create(
+                new InetSocketAddress(BASE_PORT),
+                0
+        );
 
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
-        } else {
-            port = BASE_PORT;
-        }
-
-        Server server = new Server(port);
+        server.createContext("/status", new StatusHandler());
         server.start();
+    }
+
+    static class StatusHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String response = "Ok";
+
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
     }
 }

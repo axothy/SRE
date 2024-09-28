@@ -1,0 +1,22 @@
+[Unit]
+Description=Java-app
+
+After=network.target
+
+[Service]
+Type=simple
+SuccessExitStatus=143
+
+WorkingDirectory=/opt/webapp/app
+
+ExecStart=/usr/lib/jvm/java-21-openjdk-amd64/bin/java -jar app.jar
+
+ExecStop=/bin/kill -15 $MAINPID
+
+Restart=on-failure
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
