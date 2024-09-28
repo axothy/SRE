@@ -1,0 +1,4 @@
+rootProject.name = 'SRE'
+include 'task1'
+include 'task2'
+
