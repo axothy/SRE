@@ -14,7 +14,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     // Our beloved one-nio
-    implementation 'ru.odnoklassniki:one-nio:1.7.1'
+    implementation 'ru.odnoklassniki:one-nio:2.0.0'
 }
 
 test {
