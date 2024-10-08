@@ -1,0 +1,6 @@
+[Unit]
+Description=Check status service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/webapp/script.sh
