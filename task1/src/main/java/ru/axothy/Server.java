@@ -17,6 +17,7 @@ public class Server {
         );
 
         //test
+        //test
         server.createContext("/status", new StatusHandler());
         server.start();
     }
